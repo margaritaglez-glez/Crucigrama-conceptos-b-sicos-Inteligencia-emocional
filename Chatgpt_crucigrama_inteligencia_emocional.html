@@ -1,0 +1,33 @@
+
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crucigrama IE Goleman</title>
+<style>
+body{font-family:Arial,sans-serif;margin:20px}table{border-collapse:collapse}td{width:32px;height:32px;border:1px solid #999;text-align:center}
+input{width:100%;height:100%;text-align:center;border:0;text-transform:uppercase}.blk{background:#333}
+.word{background:#ffeb3b}.found{font-weight:bold;color:#0a5}
+.def{color:green}.timer{font-size:24px;font-weight:bold}
+</style></head><body>
+<h2>Crucigrama: Inteligencia emocional según Goleman</h2>
+<div class="timer" id="t">15:00</div>
+<p>Ejemplo funcional autocontenido. Complete las palabras.</p>
+<table id="g"></table>
+<h3>Definiciones</h3>
+<ul id="defs">
+<li class="def" data-w="EMPATIA">Capacidad de comprender los sentimientos de otras personas.</li>
+<li class="def" data-w="MOTIVACION">Impulso interno para alcanzar objetivos.</li>
+<li class="def" data-w="AUTOCONTROL">Capacidad para regular impulsos.</li>
+</ul>
+<button id="c">Comprobar</button>
+<script>
+const words=[["EMPATIA",0,0,true],["MOTIVACION",2,2,false],["AUTOCONTROL",5,5,true]];
+const R=15,C=15;let grid=[...Array(R)].map(()=>Array(C).fill(""));
+words.forEach(([w,r,c,h])=>{for(let i=0;i<w.length;i++){grid[r+(h?0:i)][c+(h?i:0)]=w[i]}});
+const tbl=document.getElementById('g');
+for(let r=0;r<R;r++){let tr=document.createElement('tr');for(let c=0;c<C;c++){let td=document.createElement('td');if(grid[r][c]==""){td.className="blk"}else{td.className="word";let i=document.createElement('input');i.maxLength=1;td.appendChild(i)}tr.appendChild(td)}tbl.appendChild(tr)}
+document.getElementById('c').onclick=()=>{
+ let ok={};
+ words.forEach(([w,r,c,h])=>{let s="";for(let i=0;i<w.length;i++){let td=tbl.rows[r+(h?0:i)].cells[c+(h?i:0)];s+=td.firstChild.value.toUpperCase()} if(s==w){ok[w]=1;for(let i=0;i<w.length;i++)tbl.rows[r+(h?0:i)].cells[c+(h?i:0)].classList.add("found")}});
+ document.querySelectorAll(".def").forEach(li=>{if(ok[li.dataset.w])li.classList.add("found");});
+}
+let sec=900;setInterval(()=>{if(sec>0){sec--;let m=Math.floor(sec/60),s=sec%60;document.getElementById('t').textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;}},1000);
+</script></body></html>
